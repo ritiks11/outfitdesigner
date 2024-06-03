@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import html2pdf from "html2pdf.js";
 import { colorToFilter } from "./utils/colorToFilter";
 
 const Mannequin = () => {
@@ -10,14 +11,18 @@ const Mannequin = () => {
     ? colorToFilter(customization.color)
     : "none";
 
+  // const handleExport = () => {
+  //   const input = document.getElementById("mannequin-image");
+  //   html2canvas(input, { useCORS: true }).then((canvas) => {
+  //     const imgData = canvas.toDataURL("image/png");
+  //     const pdf = new jsPDF();
+  //     pdf.addImage(imgData, "PNG", 0, 0);
+  //     pdf.save("mannequin-customization.pdf");
+  //   });
+  // };
   const handleExport = () => {
-    const input = document.getElementById("mannequin-image");
-    html2canvas(input, { useCORS: true }).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, "PNG", 0, 0);
-      pdf.save("mannequin-customization.pdf");
-    });
+    const element = document.getElementById("mannequin-image");
+    html2pdf().from(element).save();
   };
 
   return (
