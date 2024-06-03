@@ -29,9 +29,22 @@ const CustomizePanel = () => {
   const handleSubOptionClick = (option) => {
     setExpandedSubOption(option);
   };
-
   const handleCustomizationClick = (type, value, image = "") => {
-    dispatch(setCustomization({ [type]: value, [`${type}Image`]: image }));
+    const payload =
+      selectedLehengaOption === "Lehenga"
+        ? { [type]: value, [`${type}Image`]: image }
+        : selectedLehengaOption === "Dupatta"
+        ? {
+            [`dupatta${type.charAt(0).toUpperCase() + type.slice(1)}`]: value,
+            [`dupatta${type.charAt(0).toUpperCase() + type.slice(1)}Image`]:
+              image,
+          }
+        : {
+            [`blouse${type.charAt(0).toUpperCase() + type.slice(1)}`]: value,
+            [`blouse${type.charAt(0).toUpperCase() + type.slice(1)}Image`]:
+              image,
+          };
+    dispatch(setCustomization(payload));
   };
 
   return (
@@ -45,12 +58,12 @@ const CustomizePanel = () => {
           >
             Type
           </button>
-          <button
+          {/* <button
             className="customOptions"
             onClick={() => handleMainOptionClick("length")}
           >
             Length
-          </button>
+          </button> */}
         </div>
       )}
       {selectedLehengaOption === "Dupatta" && (
@@ -61,12 +74,28 @@ const CustomizePanel = () => {
           >
             Type
           </button>
-          <button
+          {/* <button
             className="customOptions"
             onClick={() => handleMainOptionClick("length")}
           >
             Length
+          </button> */}
+        </div>
+      )}
+      {selectedLehengaOption === "Blouse" && (
+        <div className="customization-options">
+          <button
+            className="customOptions"
+            onClick={() => handleMainOptionClick("type")}
+          >
+            Type
           </button>
+          {/* <button
+            className="customOptions"
+            onClick={() => handleMainOptionClick("length")}
+          >
+            Length
+          </button> */}
         </div>
       )}
       {(expandedMainOption === "type" || expandedMainOption === "length") && (
@@ -76,16 +105,24 @@ const CustomizePanel = () => {
               <button
                 key={subOption}
                 onClick={() => handleSubOptionClick(subOption)}
-                className={expandedSubOption === subOption ? "active" : ""}
+                className={`sub-option-button ${
+                  expandedSubOption === subOption ? "active" : ""
+                }`}
               >
                 {subOption.charAt(0).toUpperCase() + subOption.slice(1)}
               </button>
             ))}
           </div>
-          {expandedSubOption === "style" && (
+          {selectedLehengaOption && expandedSubOption === "style" && (
             <div className="customization-details">
               <h3>Style</h3>
-              {mockData.customizationOptions.style.map((option, index) => (
+              {mockData[
+                selectedLehengaOption === "Lehenga"
+                  ? "customizationOptions"
+                  : selectedLehengaOption === "Dupatta"
+                  ? "customizationDupattaOptions"
+                  : "customizationBlouseOptions"
+              ].style.map((option, index) => (
                 <img
                   key={index}
                   src={option.image}
@@ -97,7 +134,7 @@ const CustomizePanel = () => {
               ))}
             </div>
           )}
-          {selectedLehengaOption === "Dupatta" &&
+          {/* {selectedLehengaOption === "Dupatta" &&
             expandedSubOption === "style" && (
               <div className="customization-details">
                 <h3>Style</h3>
@@ -118,7 +155,7 @@ const CustomizePanel = () => {
                   )
                 )}
               </div>
-            )}
+            )} */}
           {expandedSubOption === "color" && (
             <div className="customization-details">
               <h3>Color</h3>
@@ -130,10 +167,16 @@ const CustomizePanel = () => {
               />
             </div>
           )}
-          {expandedSubOption === "embroidery" && (
+          {selectedLehengaOption && expandedSubOption === "embroidery" && (
             <div className="customization-details">
               <h3>Embroidery</h3>
-              {mockData.customizationOptions.embroidery.map((option, index) => (
+              {mockData[
+                selectedLehengaOption === "Lehenga"
+                  ? "customizationOptions"
+                  : selectedLehengaOption === "Dupatta"
+                  ? "customizationDupattaOptions"
+                  : "customizationBlouseOptions"
+              ].embroidery.map((option, index) => (
                 <img
                   key={index}
                   src={option.image}
@@ -149,6 +192,28 @@ const CustomizePanel = () => {
               ))}
             </div>
           )}
+          {/* {selectedLehengaOption === "Dupatta" &&
+            expandedSubOption === "embroidery" && (
+              <div className="customization-details">
+                <h3>Embroidery</h3>
+                {mockData.customizationDupattaOptions.embroidery.map(
+                  (option, index) => (
+                    <img
+                      key={index}
+                      src={option.image}
+                      alt={option.name}
+                      onClick={() =>
+                        handleCustomizationClick(
+                          "embroidery",
+                          option.name,
+                          option.image
+                        )
+                      }
+                    />
+                  )
+                )}
+              </div>
+            )} */}
         </div>
       )}
     </div>

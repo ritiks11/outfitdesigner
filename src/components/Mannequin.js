@@ -12,7 +12,7 @@ const Mannequin = () => {
 
   const handleExport = () => {
     const input = document.getElementById("mannequin-image");
-    html2canvas(input).then((canvas) => {
+    html2canvas(input, { useCORS: true }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF();
       pdf.addImage(imgData, "PNG", 0, 0);
@@ -30,24 +30,58 @@ const Mannequin = () => {
               src={customization.styleImage}
               alt={customization.style}
               className="layer style-layer"
-              style={{ filter }}
+              style={{ filter, zIndex: 1 }}
             />
           </div>
         )}
-        {/* {customization.color && customization.styleImage && (
-          <div
-            className="layer color-layer"
-            style={{ backgroundColor: customization.color }}
-          />
-        )} */}
-
         {customization.embroideryImage && (
           <div className="embroidery-container">
             <img
               src={customization.embroideryImage}
               alt={customization.embroidery}
               className="layer embroidery-layer"
-              style={{ filter }}
+              style={{ zIndex: 1 }}
+            />
+          </div>
+        )}
+        {customization.dupattaStyleImage && (
+          <div className="dupatta-style-container">
+            <img
+              src={customization.dupattaStyleImage}
+              alt={customization.embroidery}
+              className="layer dupatta-style-layer"
+              style={{ filter, zIndex: 2 }}
+            />
+          </div>
+        )}
+        {customization.dupattaEmbroideryImage && (
+          <div className="dupatta-embroidery-container">
+            <img
+              src={customization.dupattaEmbroideryImage}
+              alt={customization.embroidery}
+              className="layer dupatta-embroidery-layer"
+              style={{ zIndex: 2 }}
+            />
+          </div>
+        )}
+
+        {customization.blouseStyleImage && (
+          <div className="blouse-style-container">
+            <img
+              src={customization.blouseStyleImage}
+              alt="Blouse Style"
+              className="layer blouse-style-layer"
+              style={{ filter, zIndex: 3 }}
+            />
+          </div>
+        )}
+        {customization.blouseEmbroideryImage && (
+          <div className="blouse-embroidery-container">
+            <img
+              src={customization.blouseEmbroideryImage}
+              alt="Blouse Embroidery"
+              className="layer blouse-embroidery-layer"
+              style={{ zIndex: 3 }}
             />
           </div>
         )}
