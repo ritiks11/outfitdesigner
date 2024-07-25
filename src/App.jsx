@@ -6,6 +6,7 @@ import CustomizePanel from "./components/CustomizePanel";
 import Mannequin from "./components/Mannequin";
 import "./styles/styles.css";
 import Navbar from "./components/navbar/Navbar";
+
 const App = () => {
   return (
     <Provider store={store}>

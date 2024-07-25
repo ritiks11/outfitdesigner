@@ -2,6 +2,7 @@ import {
   SELECT_OUTFIT,
   SELECT_LEHENGA_OPTION,
   SET_CUSTOMIZATION,
+  SET_SELECTED_IMAGE,
   // SELECT_TYPE_OPTION,
   // SELECT_LENGTH_OPTION,
 } from "./actions";
@@ -34,6 +35,7 @@ const initialState = {
     blouseEmbroidery: "",
     blouseEmbroideryImage: "",
   },
+  selectedImage: null,
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -80,6 +82,11 @@ const rootReducer = (state = initialState, action) => {
           ...state.customization,
           ...action.payload,
         },
+      };
+    case SET_SELECTED_IMAGE:
+      return {
+        ...state,
+        selectedImage: action.image,
       };
     default:
       return state;

@@ -3,9 +3,7 @@ import "./style.css";
 const Navbar = () => {
   return (
     <nav className="navbar">
-      <div className="navbar-logo">
-        <span className="title">PVES</span>
-      </div>
+      <span className="title">OUTFIT DESIGNER</span>
     </nav>
   );
 };

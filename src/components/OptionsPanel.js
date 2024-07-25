@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectOutfit, selectLehengaOption } from "../redux/actions";
 import mockData from "../mockData";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
+import { faArrowTurnUp } from "@fortawesome/free-solid-svg-icons";
 
 const OptionsPanel = () => {
   const [outfitOptions, setOutfitOptions] = useState(false);
@@ -19,20 +22,32 @@ const OptionsPanel = () => {
 
   return (
     <div className="options-panel">
-      <button className="outfitButton" onClick={() => handleOutfitClick("")}>
-        {selectedOutfit || "Select an Outfit"}
-      </button>
+      <div className="outfitPrompt">
+        <p className="promptText1">
+          start by selecting an outfit!{" "}
+          <FontAwesomeIcon icon={faArrowTurnDown} />
+        </p>
+      </div>
+      <div className="selectOutfitBtnContainer">
+        <button className="outfitButton" onClick={() => handleOutfitClick("")}>
+          {selectedOutfit || "Select an Outfit"}
+        </button>
+      </div>
+
       {outfitOptions && (
-        <div className="outfit-options">
-          {mockData.outfits.map((outfit, index) => (
-            <button
-              className="clothesOptions"
-              key={index}
-              onClick={() => handleOutfitClick(outfit)}
-            >
-              {outfit}
-            </button>
-          ))}
+        <div className="optionsContainer">
+          <div className="outfit-options">
+            {mockData.outfits.map((outfit, index) => (
+              <button
+                className="clothesOptions"
+                key={index}
+                onClick={() => handleOutfitClick(outfit)}
+              >
+                <FontAwesomeIcon icon={faArrowTurnUp} className="arrowIcons" />{" "}
+                {outfit}
+              </button>
+            ))}
+          </div>
         </div>
       )}
       {selectedOutfit === "Lehenga Set" && (
@@ -43,6 +58,7 @@ const OptionsPanel = () => {
               key={index}
               onClick={() => handleLehengaOptionClick(option)}
             >
+              <FontAwesomeIcon icon={faArrowTurnUp} className="arrowIcons" />{" "}
               {option}
             </button>
           ))}

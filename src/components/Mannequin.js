@@ -1,99 +1,81 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import html2pdf from "html2pdf.js";
+import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { colorToFilter } from "./utils/colorToFilter";
 
 const Mannequin = () => {
+  const canvasRef = useRef(null);
   const customization = useSelector((state) => state.customization);
+  const selectedImage = useSelector((state) => state.selectedImage);
   const filter = customization.color
     ? colorToFilter(customization.color)
     : "none";
 
-  // const handleExport = () => {
-  //   const input = document.getElementById("mannequin-image");
-  //   html2canvas(input, { useCORS: true }).then((canvas) => {
-  //     const imgData = canvas.toDataURL("image/png");
-  //     const pdf = new jsPDF();
-  //     pdf.addImage(imgData, "PNG", 0, 0);
-  //     pdf.save("mannequin-customization.pdf");
-  //   });
-  // };
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    const mannequinImage = new Image();
+    mannequinImage.src = "../assets/Layer1.png";
+
+    mannequinImage.onload = () => {
+      const x = (canvas.width - 300) / 2;
+      const y = (canvas.height - 450) / 2;
+      ctx.drawImage(mannequinImage, x, y, 300, 450);
+
+      if (selectedImage) {
+        const img = new Image();
+        img.src = selectedImage;
+        img.onload = () => {
+          const imgX = (canvas.width - 300) / 2; // Center horizontally
+          const imgY = (canvas.height - 450) / 2; // Start from the middle vertically
+          ctx.drawImage(img, imgX, imgY, 300, 450);
+        };
+      }
+    };
+  }, [customization, selectedImage]);
+
   const handleExport = () => {
-    const element = document.getElementById("mannequin-image");
-    html2pdf().from(element).save();
+    const element = document.getElementById("myCanvas");
+    // Create a new PDF document
+    const pdf = new jsPDF("p", "pt", "a4"); // Use 'pt' for units and 'a4' for page size
+    // Calculate dimensions and positioning
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    const canvasWidth = element.width;
+    const canvasHeight = element.height;
+
+    const x = (pdfWidth - canvasWidth) / 2; // Center horizontally
+    const y = (pdfHeight - canvasHeight) / 2; // Center vertically
+
+    // Convert canvas to image data URL
+    const canvasDataUrl = element.toDataURL("image/png");
+
+    // Add the image to the PDF
+    pdf.addImage(canvasDataUrl, "PNG", x, y, canvasWidth, canvasHeight);
+
+    // Save the PDF
+    pdf.save("mannequin-customization.pdf");
   };
 
   return (
     <div className="mannequin">
-      <div id="mannequin-image" className="mannequin-image">
-        <img className="body" src="../assets/Layer1.png" />
-        {customization.styleImage && (
-          <div className="style-container">
-            <img
-              src={customization.styleImage}
-              alt={customization.style}
-              className="layer style-layer"
-              style={{ filter, zIndex: 1 }}
-            />
-          </div>
-        )}
-        {customization.embroideryImage && (
-          <div className="embroidery-container">
-            <img
-              src={customization.embroideryImage}
-              alt={customization.embroidery}
-              className="layer embroidery-layer"
-              style={{ zIndex: 1 }}
-            />
-          </div>
-        )}
-        {customization.dupattaStyleImage && (
-          <div className="dupatta-style-container">
-            <img
-              src={customization.dupattaStyleImage}
-              alt={customization.embroidery}
-              className="layer dupatta-style-layer"
-              style={{ filter, zIndex: 2 }}
-            />
-          </div>
-        )}
-        {customization.dupattaEmbroideryImage && (
-          <div className="dupatta-embroidery-container">
-            <img
-              src={customization.dupattaEmbroideryImage}
-              alt={customization.embroidery}
-              className="layer dupatta-embroidery-layer"
-              style={{ zIndex: 2 }}
-            />
-          </div>
-        )}
-
-        {customization.blouseStyleImage && (
-          <div className="blouse-style-container">
-            <img
-              src={customization.blouseStyleImage}
-              alt="Blouse Style"
-              className="layer blouse-style-layer"
-              style={{ filter, zIndex: 3 }}
-            />
-          </div>
-        )}
-        {customization.blouseEmbroideryImage && (
-          <div className="blouse-embroidery-container">
-            <img
-              src={customization.blouseEmbroideryImage}
-              alt="Blouse Embroidery"
-              className="layer blouse-embroidery-layer"
-              style={{ zIndex: 3 }}
-            />
-          </div>
-        )}
-      </div>
-
+      <p className="promptText2">
+        Style your mannequin! <FontAwesomeIcon icon={faArrowTurnDown} />
+      </p>
+      <canvas
+        id="myCanvas"
+        ref={canvasRef}
+        width={300}
+        height={450}
+        style={{ border: "2px solid" }}
+      />
       <button className="exportButton" onClick={handleExport}>
-        Export
+        Export as PDF
       </button>
     </div>
   );

@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setCustomization,
-  selectTypeOption,
-  selectLengthOption,
-} from "../redux/actions";
+import { setCustomization, setSelectedImage } from "../redux/actions";
 import mockData from "../mockData";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
 
 const CustomizePanel = () => {
   const dispatch = useDispatch();
@@ -29,6 +27,7 @@ const CustomizePanel = () => {
   const handleSubOptionClick = (option) => {
     setExpandedSubOption(option);
   };
+
   const handleCustomizationClick = (type, value, image = "") => {
     const payload =
       selectedLehengaOption === "Lehenga"
@@ -45,11 +44,16 @@ const CustomizePanel = () => {
               image,
           };
     dispatch(setCustomization(payload));
+    dispatch(setSelectedImage(image));
   };
 
   return (
     <div className="customize-panel">
-      <h2 className="customizeTitle">Customize</h2>
+      <div className="outfitPrompt">
+        <p className="promptText1">
+          Customize section is here! <FontAwesomeIcon icon={faArrowTurnDown} />
+        </p>
+      </div>
       {selectedLehengaOption === "Lehenga" && (
         <div className="customization-options">
           <button
@@ -58,12 +62,6 @@ const CustomizePanel = () => {
           >
             Type
           </button>
-          {/* <button
-            className="customOptions"
-            onClick={() => handleMainOptionClick("length")}
-          >
-            Length
-          </button> */}
         </div>
       )}
       {selectedLehengaOption === "Dupatta" && (
@@ -74,12 +72,6 @@ const CustomizePanel = () => {
           >
             Type
           </button>
-          {/* <button
-            className="customOptions"
-            onClick={() => handleMainOptionClick("length")}
-          >
-            Length
-          </button> */}
         </div>
       )}
       {selectedLehengaOption === "Blouse" && (
@@ -90,12 +82,6 @@ const CustomizePanel = () => {
           >
             Type
           </button>
-          {/* <button
-            className="customOptions"
-            onClick={() => handleMainOptionClick("length")}
-          >
-            Length
-          </button> */}
         </div>
       )}
       {(expandedMainOption === "type" || expandedMainOption === "length") && (
@@ -115,7 +101,9 @@ const CustomizePanel = () => {
           </div>
           {selectedLehengaOption && expandedSubOption === "style" && (
             <div className="customization-details">
-              <h3>Style</h3>
+              <p className="detailText">
+                Choose your Style <FontAwesomeIcon icon={faArrowTurnDown} />
+              </p>
               {mockData[
                 selectedLehengaOption === "Lehenga"
                   ? "customizationOptions"
@@ -134,42 +122,26 @@ const CustomizePanel = () => {
               ))}
             </div>
           )}
-          {/* {selectedLehengaOption === "Dupatta" &&
-            expandedSubOption === "style" && (
-              <div className="customization-details">
-                <h3>Style</h3>
-                {mockData.customizationDupattaOptions.style.map(
-                  (option, index) => (
-                    <img
-                      key={index}
-                      src={option.image}
-                      alt={option.name}
-                      onClick={() =>
-                        handleCustomizationClick(
-                          "style",
-                          option.name,
-                          option.image
-                        )
-                      }
-                    />
-                  )
-                )}
-              </div>
-            )} */}
           {expandedSubOption === "color" && (
             <div className="customization-details">
-              <h3>Color</h3>
+              <p className="detailText">
+                Choose your Color! <FontAwesomeIcon icon={faArrowTurnDown} />
+              </p>
               <input
                 type="color"
                 onChange={(e) =>
                   handleCustomizationClick("color", e.target.value)
                 }
+                className="colorbox"
               />
             </div>
           )}
           {selectedLehengaOption && expandedSubOption === "embroidery" && (
             <div className="customization-details">
-              <h3>Embroidery</h3>
+              <p className="detailText">
+                Select your Embroidery{" "}
+                <FontAwesomeIcon icon={faArrowTurnDown} />
+              </p>
               {mockData[
                 selectedLehengaOption === "Lehenga"
                   ? "customizationOptions"
@@ -192,28 +164,6 @@ const CustomizePanel = () => {
               ))}
             </div>
           )}
-          {/* {selectedLehengaOption === "Dupatta" &&
-            expandedSubOption === "embroidery" && (
-              <div className="customization-details">
-                <h3>Embroidery</h3>
-                {mockData.customizationDupattaOptions.embroidery.map(
-                  (option, index) => (
-                    <img
-                      key={index}
-                      src={option.image}
-                      alt={option.name}
-                      onClick={() =>
-                        handleCustomizationClick(
-                          "embroidery",
-                          option.name,
-                          option.image
-                        )
-                      }
-                    />
-                  )
-                )}
-              </div>
-            )} */}
         </div>
       )}
     </div>
